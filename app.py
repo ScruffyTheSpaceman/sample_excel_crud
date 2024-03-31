@@ -1,10 +1,12 @@
 from flask import Flask
+from flask_cors import CORS
 from flask_restx import Api, Resource, fields
 import pandas as pd
 
 app = Flask(__name__)
 api = Api(app, version='1.0', title='Excel API',
           description='A simple API for manipulating Excel files')
+CORS(app, supports_credentials=True, origins=['http://localhost:3000'])
 
 EXCEL_FILE = 'data.xlsx'  # Define the Excel file path
 
