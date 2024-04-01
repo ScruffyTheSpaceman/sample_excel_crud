@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_restx import Api, Resource, fields
 import pandas as pd
@@ -6,7 +6,7 @@ import pandas as pd
 app = Flask(__name__)
 api = Api(app, version='1.0', title='Excel API',
           description='A simple API for manipulating Excel files')
-CORS(app, supports_credentials=True, origins=['http://localhost:3000'])
+CORS(app, supports_credentials=True, origins=['http://localhost:3000'], allow_headers=['Content-Type', 'Authorization'])
 
 EXCEL_FILE = 'data.xlsx'  # Define the Excel file path
 
@@ -24,8 +24,10 @@ class RowsList(Resource):
     @ns.doc('list_rows')
     def get(self):
         """List all rows"""
+
         df = pd.read_excel(EXCEL_FILE, engine=None)
-        return df.to_dict()
+        df_filled = df.fillna('')
+        return jsonify(df_filled.to_dict())
 
     @ns.doc('create_row')
     @ns.expect(row_model)
